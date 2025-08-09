@@ -6,7 +6,7 @@ log: 0.01 versión inicial.
 
 Realizó: Pablo Sobral, para Termodinámica. 
 
-Fecha: 2024-08-09
+Fecha: 2025-08-09
 
 Contacto: psobral@fi.uba.ar.
 
