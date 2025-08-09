@@ -3,6 +3,7 @@ import CoolProp.CoolProp as cp
 import matplotlib.pyplot as plt
 import numpy as np
 from CoolProp.CoolProp import PropsSI
+from itertools import combinations
 
 # Título de la aplicación
 st.subheader("Termodinámica - Máquinas Térmicas - Tecnología del Calor")
@@ -60,114 +61,35 @@ def manejar_cambio(key):
             st.session_state['second_input'] = key
 
 
-def calcular_propiedades(desde, **kwargs):
-    """Calcula todas las propiedades del agua a partir de un par de variables."""
-    t = p = v = u = h = s = x = None
+def calcular_propiedades(var1, var2, **kwargs):
+    """Calcula todas las propiedades del agua a partir de cualquier par de variables."""
+    input_map = {
+        'p': ('P', lambda v: v * 1e5),
+        't': ('T', lambda v: v + 273.15),
+        'v': ('D', lambda v: 1 / v if v != 0 else float("inf")),
+        'u': ('U', lambda v: v * 1000),
+        'h': ('H', lambda v: v * 1000),
+        's': ('S', lambda v: v * 1000),
+        'x': ('Q', lambda v: v),
+    }
     try:
-        if desde == 'TP':
-            t_kelvin = kwargs['t'] + 273.15
-            p_pascal = kwargs['p'] * 1e5
-            t = kwargs['t']
-            p = kwargs['p']
-            rho = cp.PropsSI('D', 'P', p_pascal, 'T', t_kelvin, "Water")
-            v = 1 / rho if rho != 0 else float("inf")
-            u = cp.PropsSI('U', 'P', p_pascal, 'T', t_kelvin, 'Water') / 1000
-            h = cp.PropsSI('H', 'P', p_pascal, 'T', t_kelvin, 'Water') / 1000
-            s = cp.PropsSI('S', 'P', p_pascal, 'T', t_kelvin, 'Water') / 1000
-            x = cp.PropsSI('Q', 'P', p_pascal, 'T', t_kelvin, 'Water')
-        elif desde == 'PH':
-            h_joules = kwargs['h'] * 1000
-            p_pascal = kwargs['p'] * 1e5
-            h = kwargs['h']
-            p = kwargs['p']
-            t_kelvin = cp.PropsSI('T', 'P', p_pascal, 'H', h_joules, 'Water')
-            rho = cp.PropsSI('D', 'P', p_pascal, 'H', h_joules, "Water")
-            v = 1 / rho if rho != 0 else float("inf")
-            u = cp.PropsSI('U', 'P', p_pascal, 'H', h_joules, 'Water') / 1000
-            s = cp.PropsSI('S', 'P', p_pascal, 'H', h_joules, 'Water') / 1000
-            x = cp.PropsSI('Q', 'P', p_pascal, 'H', h_joules, 'Water')
-            t = t_kelvin - 273.15
-        elif desde == 'HS':
-            h_joules = kwargs['h'] * 1000
-            s_joules = kwargs['s'] * 1000
-            h = kwargs['h']
-            s = kwargs['s']
-            t_kelvin = cp.PropsSI('T', 'H', h_joules, 'S', s_joules, 'Water')
-            p_pascal = cp.PropsSI('P', 'H', h_joules, 'S', s_joules, 'Water')
-            rho = cp.PropsSI('D', 'H', h_joules, 'S', s_joules, "Water")
-            v = 1 / rho if rho != 0 else float("inf")
-            u = cp.PropsSI('U', 'H', h_joules, 'S', s_joules, 'Water') / 1000
-            x = cp.PropsSI('Q', 'H', h_joules, 'S', s_joules, 'Water')
-            t = t_kelvin - 273.15
-            p = p_pascal / 1e5
-        elif desde == 'PX':
-            p_pascal = kwargs['p'] * 1e5
-            x = kwargs['x']
-            p = kwargs['p']
-            t_kelvin = cp.PropsSI('T', 'P', p_pascal, 'Q', x, 'Water')
-            rho = cp.PropsSI('D', 'P', p_pascal, 'Q', x, "Water")
-            v = 1 / rho if rho != 0 else float("inf")
-            u = cp.PropsSI('U', 'P', p_pascal, 'Q', x, 'Water') / 1000
-            h = cp.PropsSI('H', 'P', p_pascal, 'Q', x, 'Water') / 1000
-            s = cp.PropsSI('S', 'P', p_pascal, 'Q', x, 'Water') / 1000
-            t = t_kelvin - 273.15
-        elif desde == 'TX':
-            t_kelvin = kwargs['t'] + 273.15
-            x = kwargs['x']
-            t = kwargs['t']
-            p_pascal = cp.PropsSI('P', 'T', t_kelvin, 'Q', x, 'Water')
-            rho = cp.PropsSI('D', 'T', t_kelvin, 'Q', x, "Water")
-            v = 1 / rho if rho != 0 else float("inf")
-            u = cp.PropsSI('U', 'T', t_kelvin, 'Q', x, 'Water') / 1000
-            h = cp.PropsSI('H', 'T', t_kelvin, 'Q', x, 'Water') / 1000
-            s = cp.PropsSI('S', 'T', t_kelvin, 'Q', x, 'Water') / 1000
-            p = p_pascal / 1e5
-        elif desde == 'PS':
-            p_pascal = kwargs['p'] * 1e5
-            s_joules = kwargs['s'] * 1000
-            p = kwargs['p']
-            s = kwargs['s']
-            t_kelvin = cp.PropsSI('T', 'P', p_pascal, 'S', s_joules, 'Water')
-            rho = cp.PropsSI('D', 'P', p_pascal, 'S', s_joules, "Water")
-            v = 1 / rho if rho != 0 else float("inf")
-            u = cp.PropsSI('U', 'P', p_pascal, 'S', s_joules, 'Water') / 1000
-            h = cp.PropsSI('H', 'P', p_pascal, 'S', s_joules, 'Water') / 1000
-            x = cp.PropsSI('Q', 'P', p_pascal, 'S', s_joules, 'Water')
-            t = t_kelvin - 273.15
-        elif desde == 'TS':
-            t_kelvin = kwargs['t'] + 273.15
-            s_joules = kwargs['s'] * 1000
-            t = kwargs['t']
-            s = kwargs['s']
-            p_pascal = cp.PropsSI('P', 'T', t_kelvin, 'S', s_joules, 'Water')
-            rho = cp.PropsSI('D', 'T', t_kelvin, 'S', s_joules, "Water")
-            v = 1 / rho if rho != 0 else float("inf")
-            u = cp.PropsSI('U', 'T', t_kelvin, 'S', s_joules, 'Water') / 1000
-            h = cp.PropsSI('H', 'T', t_kelvin, 'S', s_joules, 'Water') / 1000
-            x = cp.PropsSI('Q', 'T', t_kelvin, 'S', s_joules, 'Water')
-            p = p_pascal / 1e5
-        elif desde == 'PV':
-            p_pascal = kwargs['p'] * 1e5
-            rho = 1 / kwargs['v'] if kwargs['v'] != 0 else float("inf")
-            p = kwargs['p']
-            v = kwargs['v']
-            t_kelvin = cp.PropsSI('T', 'P', p_pascal, 'D', rho, 'Water')
-            u = cp.PropsSI('U', 'P', p_pascal, 'D', rho, 'Water') / 1000
-            h = cp.PropsSI('H', 'P', p_pascal, 'D', rho, 'Water') / 1000
-            s = cp.PropsSI('S', 'P', p_pascal, 'D', rho, 'Water') / 1000
-            x = cp.PropsSI('Q', 'P', p_pascal, 'D', rho, 'Water')
-            t = t_kelvin - 273.15
-        elif desde == 'TV':
-            t_kelvin = kwargs['t'] + 273.15
-            rho = 1 / kwargs['v'] if kwargs['v'] != 0 else float("inf")
-            t = kwargs['t']
-            v = kwargs['v']
-            p_pascal = cp.PropsSI('P', 'T', t_kelvin, 'D', rho, 'Water')
-            u = cp.PropsSI('U', 'T', t_kelvin, 'D', rho, 'Water') / 1000
-            h = cp.PropsSI('H', 'T', t_kelvin, 'D', rho, 'Water') / 1000
-            s = cp.PropsSI('S', 'T', t_kelvin, 'D', rho, 'Water') / 1000
-            x = cp.PropsSI('Q', 'T', t_kelvin, 'D', rho, 'Water')
-            p = p_pascal / 1e5
+        name1, val1 = input_map[var1][0], input_map[var1][1](kwargs[var1])
+        name2, val2 = input_map[var2][0], input_map[var2][1](kwargs[var2])
+
+        t_kelvin = cp.PropsSI('T', name1, val1, name2, val2, 'Water')
+        p_pascal = cp.PropsSI('P', name1, val1, name2, val2, 'Water')
+        rho = cp.PropsSI('D', name1, val1, name2, val2, 'Water')
+        u_joules = cp.PropsSI('U', name1, val1, name2, val2, 'Water')
+        h_joules = cp.PropsSI('H', name1, val1, name2, val2, 'Water')
+        s_joules = cp.PropsSI('S', name1, val1, name2, val2, 'Water')
+        x = cp.PropsSI('Q', name1, val1, name2, val2, 'Water')
+
+        t = t_kelvin - 273.15
+        p = p_pascal / 1e5
+        v = 1 / rho if rho != 0 else float("inf")
+        u = u_joules / 1000
+        h = h_joules / 1000
+        s = s_joules / 1000
 
         return t, p, v, u, h, s, x
     except Exception as e:
@@ -204,17 +126,7 @@ if st.button("Calcular"):
     if len(valores) != 2:
         st.error("Por favor, ingrese exactamente dos valores.")
     else:
-        pair_map = {
-            frozenset({'t', 'p'}): 'TP',
-            frozenset({'p', 'h'}): 'PH',
-            frozenset({'h', 's'}): 'HS',
-            frozenset({'p', 'x'}): 'PX',
-            frozenset({'t', 'x'}): 'TX',
-            frozenset({'p', 's'}): 'PS',
-            frozenset({'t', 's'}): 'TS',
-            frozenset({'p', 'v'}): 'PV',
-            frozenset({'t', 'v'}): 'TV',
-        }
+        pair_map = {frozenset(c): c for c in combinations(VARIABLES, 2)}
         clave = pair_map.get(frozenset(valores.keys()))
         if clave is None:
             st.error("Combinación de propiedades no soportada.")
@@ -224,7 +136,7 @@ if st.button("Calcular"):
             except ValueError:
                 st.error("Los valores deben ser numéricos.")
             else:
-                t, p, v, u, h, s, x = calcular_propiedades(clave, **parsed)
+                t, p, v, u, h, s, x = calcular_propiedades(*clave, **parsed)
                 if t is not None:
                     st.session_state['resultados'] = {
                         'p': p,
