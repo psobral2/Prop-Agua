@@ -11,6 +11,15 @@ st.markdown("---")
 
 # Variables disponibles
 VARIABLES = ['p', 't', 'v', 'u', 'h', 's', 'x']
+FMT = {
+    'p': '{:.2f}',
+    't': '{:.2f}',
+    'v': '{:.4f}',
+    'u': '{:.2f}',
+    'h': '{:.2f}',
+    's': '{:.4f}',
+    'x': '{:.4f}',
+}
 
 # Inicialización del estado
 for var in VARIABLES:
@@ -20,6 +29,17 @@ st.session_state.setdefault('second_input', None)
 st.session_state.setdefault('t_num', None)
 st.session_state.setdefault('s_num', None)
 st.session_state.setdefault('calculado', False)
+st.session_state.setdefault('resultados', None)
+
+# Actualizar los valores calculados antes de instanciar los widgets
+if st.session_state.get('resultados'):
+    resultados = st.session_state.pop('resultados')
+    for var in VARIABLES:
+        valor = resultados.get(var)
+        st.session_state[var] = FMT[var].format(valor) if valor is not None else ''
+    st.session_state['t_num'] = resultados.get('t')
+    st.session_state['s_num'] = resultados.get('s')
+    st.session_state['calculado'] = True
 
 
 def manejar_cambio(key):
@@ -206,20 +226,21 @@ if st.button("Calcular"):
             else:
                 t, p, v, u, h, s, x = calcular_propiedades(clave, **parsed)
                 if t is not None:
-                    resultados = {'p': p, 't': t, 'v': v, 'u': u, 'h': h, 's': s, 'x': x}
-                    fmt = {'p': '{:.2f}', 't': '{:.2f}', 'v': '{:.4f}', 'u': '{:.2f}',
-                           'h': '{:.2f}', 's': '{:.4f}', 'x': '{:.4f}'}
-                    for var in VARIABLES:
-                        valor = resultados[var]
-                        if valor is not None:
-                            st.session_state[var] = fmt[var].format(valor)
-                        else:
-                            st.session_state[var] = ''
-                    st.session_state['t_num'] = t
-                    st.session_state['s_num'] = s
-                    st.session_state['calculado'] = True
+                    st.session_state['resultados'] = {
+                        'p': p,
+                        't': t,
+                        'v': v,
+                        'u': u,
+                        'h': h,
+                        's': s,
+                        'x': x,
+                    }
                     st.session_state['first_input'] = None
                     st.session_state['second_input'] = None
+                    try:
+                        st.rerun()
+                    except AttributeError:
+                        st.experimental_rerun()
 
 
 if st.session_state.get('calculado', False):
