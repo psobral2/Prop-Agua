@@ -8,7 +8,7 @@ if 's' not in st.session_state:
     st.session_state['s'] = None
 
 # Título de la aplicación
-st.subheader("Tecnología del Calor - Termodinámica y Máquinas Térmicas")
+st.subheader("Termodinámica - Máquinas Térmicas - Tecnología del Calor")
 st.title("💧 Calculador de propiedades del agua")
 # Separador
 st.markdown("---")
@@ -165,12 +165,11 @@ option = st.sidebar.radio(
 )
 
 # Texto adicional
-st.sidebar.write("Desarrollado por Pablo M. Barral para **Tecnología del Calor**.")
-st.sidebar.write("Ampliado por P. Sobral (psobral@fi.uba.ar).")
-st.sidebar.write("Versión: 0.03.")
-st.sidebar.write("Contacto: pbarral@fi.uba.ar.")
+st.sidebar.write("Desarrollado por P Sobral para **Termodinámica**.")
+st.sidebar.write("Versión: 0.01.")
+st.sidebar.write("Contacto: psobral@fi.uba.ar.")
 st.sidebar.write("Powered by CoolProp.")
-st.sidebar.markdown("[Readme.md](https://github.com/psobral2/Tablas-Vapor/blob/main/README.md)")
+st.sidebar.markdown("[Readme.md](https://github.com/psobral2/Prop-Agua/blob/main/README.md)")
 
 
 if option == 't y p':
@@ -406,4 +405,4 @@ if st.session_state.get('calculado', False):
 # Separador
 #st.markdown("---")
 # Texto adicional
-#st.write("Desarrollado por Pablo M. Barral para **Tecnología del Calor**. Ampliado por P. Sobral (psobral@fi.uba.ar). Versión: 0.03. Contacto: pbarral@fi.uba.ar. Powered by CoolProp. Ver [Readme.md](https://github.com/psobral2/Tablas-Vapor/blob/main/README.md) en Github.")
+#st.write("Desarrollado por P. Sobral para **Termodinámica**. Versión: 0.01. Contacto: psobral@fi.uba.ar. Powered by CoolProp. Ver [Readme.md](https://github.com/psobral2/Prop-Agua/blob/main/README.md) en Github.")
