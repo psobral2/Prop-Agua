@@ -18,9 +18,15 @@ FLUID_MAP = {
 }
 st.session_state.setdefault('fluid', 'Water')
 
-st.markdown(
-    f"### **💧 Propiedades del {next(k for k, v in FLUID_MAP.items() if v == st.session_state['fluid'])}**"
-)
+# Determinar el nombre del fluido
+fluid_name = next(k for k, v in FLUID_MAP.items() if v == st.session_state['fluid'])
+
+# Elegir el ícono
+icon = "💧" if fluid_name == "Agua" else "❄️"
+
+# Mostrar el título
+st.markdown(f"### **{icon} Propiedades del {fluid_name}**")
+
 st.selectbox(
     "Sustancia",
     list(FLUID_MAP.values()),
