@@ -137,11 +137,11 @@ st.caption("##### Ingrese dos propiedades en las casillas correspondientes")
 col1, col2, col3 = st.columns(3)
 with col1:
     st.text_input("Presión [bar(a)]", key='p', on_change=manejar_cambio, args=('p',))
-    st.text_input("Volumen específico [m³/kg]", key='v', on_change=manejar_cambio, args=('v',))
-    st.text_input("Entalpía [kJ/kg]", key='h', on_change=manejar_cambio, args=('h',))
-with col2:
     st.text_input("Temperatura [°C]", key='t', on_change=manejar_cambio, args=('t',))
+    st.text_input("Volumen específico [m³/kg]", key='v', on_change=manejar_cambio, args=('v',))
+with col2:
     st.text_input("Energía interna [kJ/kg]", key='u', on_change=manejar_cambio, args=('u',))
+    st.text_input("Entalpía [kJ/kg]", key='h', on_change=manejar_cambio, args=('h',))
     st.text_input("Entropía [kJ/(kg·K)]", key='s', on_change=manejar_cambio, args=('s',))
 with col3:
     st.text_input("Título [0-1]", key='x', on_change=manejar_cambio, args=('x',))
