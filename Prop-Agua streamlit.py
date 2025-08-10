@@ -125,7 +125,6 @@ def calcular_propiedades(var1, var2, fluid, **kwargs):
 
 # Barra lateral informativa
 st.sidebar.write("Desarrollado por P. Sobral para **Termodinámica**.")
-st.sidebar.write("Inspirado en el **Calculador de propiedades del agua** del Ing. **P. Barral**.")
 st.sidebar.write("Versión: 1.0.")
 st.sidebar.write("Contacto: psobral@fi.uba.ar.")
 st.sidebar.write("Powered by CoolProp.")
