@@ -30,4 +30,4 @@ x = título [-]
 
 Se deben ingresar valores razonables.
 x = -1 significa que el estado no se encuentra ni dentro de la campana ni en su frontera.
-CoolProp aún no permite calcular desde los siguientes pares de parámetros: (u,h) (u,s) (u,x) (h,x) y (s,x).
+CoolProp aún no permite calcular desde los siguientes pares de parámetros: (t,u) (t,h) (u,h) (u,s) (u,x) (h,x) y (s,x).
