@@ -106,7 +106,7 @@ st.sidebar.write("Powered by CoolProp.")
 st.sidebar.markdown("[Readme.md](https://github.com/psobral2/Prop-Agua/blob/main/README.md)")
 
 
-st.write("### Ingrese dos propiedades en las casillas correspondientes")
+st.caption("### Ingrese dos propiedades en las casillas correspondientes")
 
 col1, col2, col3 = st.columns(3)
 with col1:
