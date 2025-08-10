@@ -6,7 +6,7 @@ from CoolProp.CoolProp import PropsSI
 from itertools import combinations
 
 # Título de la aplicación
-st.markdown("### Termodinámica – Máquinas Térmicas – Tecnología del Calor")
+st.markdown("#### Termodinámica – Máquinas Térmicas – Tecnología del Calor")
 st.markdown("##### **💧 Calculador de propiedades del agua**")
 st.divider()
 
@@ -106,7 +106,7 @@ st.sidebar.write("Powered by CoolProp.")
 st.sidebar.markdown("[Readme.md](https://github.com/psobral2/Prop-Agua/blob/main/README.md)")
 
 
-st.caption("### Ingrese dos propiedades en las casillas correspondientes")
+st.caption("##### Ingrese dos propiedades en las casillas correspondientes")
 
 col1, col2, col3 = st.columns(3)
 with col1:
