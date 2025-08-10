@@ -6,8 +6,8 @@ from CoolProp.CoolProp import PropsSI
 from itertools import combinations
 
 # Título de la aplicación
-st.subheader("Termodinámica - Máquinas Térmicas - Tecnología del Calor")
-st.title("💧 Calculador de propiedades del agua")
+st.markdown("### Termodinámica – Máquinas Térmicas – Tecnología del Calor")
+st.markdown("## 💧 Calculador de propiedades del agua")
 st.markdown("---")
 
 # Variables disponibles
