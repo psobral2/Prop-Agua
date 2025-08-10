@@ -99,7 +99,8 @@ def calcular_propiedades(var1, var2, **kwargs):
 
 
 # Barra lateral informativa
-st.sidebar.write("Desarrollado por P Sobral para **Termodinámica**.")
+st.sidebar.write("Desarrollado por P. Sobral para **Termodinámica**.")
+st.sidebar.write("Inspirado en **Calculador** de **P. Barral.**")
 st.sidebar.write("Versión: 0.01.")
 st.sidebar.write("Contacto: psobral@fi.uba.ar.")
 st.sidebar.write("Powered by CoolProp.")
