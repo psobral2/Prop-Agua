@@ -7,7 +7,26 @@ from itertools import combinations
 
 # Título de la aplicación
 st.caption("###### Termodinámica – Máquinas Térmicas – Tecnología del Calor")
-st.markdown("### **💧 Propiedades del agua**")
+
+# Selección de fluido
+FLUID_MAP = {
+    'Agua': 'Water',
+    'R134a': 'R134a',
+    'R22': 'R22',
+    'R404A': 'R404A',
+    'Amoníaco': 'Ammonia',
+}
+st.session_state.setdefault('fluid', 'Water')
+
+st.markdown(
+    f"### **💧 Propiedades del {next(k for k, v in FLUID_MAP.items() if v == st.session_state['fluid'])}**"
+)
+st.selectbox(
+    "Sustancia",
+    list(FLUID_MAP.values()),
+    key='fluid',
+    format_func=lambda v: next(k for k, val in FLUID_MAP.items() if val == v),
+)
 st.divider()
 
 # Variables disponibles
@@ -61,8 +80,8 @@ def manejar_cambio(key):
             st.session_state['second_input'] = key
 
 
-def calcular_propiedades(var1, var2, **kwargs):
-    """Calcula todas las propiedades del agua a partir de cualquier par de variables."""
+def calcular_propiedades(var1, var2, fluid, **kwargs):
+    """Calcula todas las propiedades del fluido seleccionado a partir de cualquier par de variables."""
     input_map = {
         'p': ('P', lambda v: v * 1e5),
         't': ('T', lambda v: v + 273.15),
@@ -76,13 +95,13 @@ def calcular_propiedades(var1, var2, **kwargs):
         name1, val1 = input_map[var1][0], input_map[var1][1](kwargs[var1])
         name2, val2 = input_map[var2][0], input_map[var2][1](kwargs[var2])
 
-        t_kelvin = cp.PropsSI('T', name1, val1, name2, val2, 'Water')
-        p_pascal = cp.PropsSI('P', name1, val1, name2, val2, 'Water')
-        rho = cp.PropsSI('D', name1, val1, name2, val2, 'Water')
-        u_joules = cp.PropsSI('U', name1, val1, name2, val2, 'Water')
-        h_joules = cp.PropsSI('H', name1, val1, name2, val2, 'Water')
-        s_joules = cp.PropsSI('S', name1, val1, name2, val2, 'Water')
-        x = cp.PropsSI('Q', name1, val1, name2, val2, 'Water')
+        t_kelvin = cp.PropsSI('T', name1, val1, name2, val2, fluid)
+        p_pascal = cp.PropsSI('P', name1, val1, name2, val2, fluid)
+        rho = cp.PropsSI('D', name1, val1, name2, val2, fluid)
+        u_joules = cp.PropsSI('U', name1, val1, name2, val2, fluid)
+        h_joules = cp.PropsSI('H', name1, val1, name2, val2, fluid)
+        s_joules = cp.PropsSI('S', name1, val1, name2, val2, fluid)
+        x = cp.PropsSI('Q', name1, val1, name2, val2, fluid)
 
         t = t_kelvin - 273.15
         p = p_pascal / 1e5
@@ -137,7 +156,9 @@ if st.button("Calcular"):
             except ValueError:
                 st.error("Los valores deben ser numéricos.")
             else:
-                t, p, v, u, h, s, x = calcular_propiedades(*clave, **parsed)
+                t, p, v, u, h, s, x = calcular_propiedades(
+                    *clave, st.session_state['fluid'], **parsed
+                )
                 if t is not None:
                     st.session_state['resultados'] = {
                         'p': p,
@@ -160,9 +181,12 @@ if st.session_state.get('calculado', False):
     t_session = st.session_state.get('t_num')
     s_session = st.session_state.get('s_num')
     if t_session is not None and s_session is not None:
-        Tsat = np.linspace(273.15, 647.095, 500)
-        s_liq = [PropsSI("S", "T", T, "Q", 0, "Water") / 1000 for T in Tsat]
-        s_vap = [PropsSI("S", "T", T, "Q", 1, "Water") / 1000 for T in Tsat]
+        fluido = st.session_state['fluid']
+        Tcrit = PropsSI('Tcrit', fluido)
+        Tmin = PropsSI('Ttriple', fluido)
+        Tsat = np.linspace(Tmin, Tcrit, 500)
+        s_liq = [PropsSI('S', 'T', T, 'Q', 0, fluido) / 1000 for T in Tsat]
+        s_vap = [PropsSI('S', 'T', T, 'Q', 1, fluido) / 1000 for T in Tsat]
         T_C = Tsat - 273.15
 
         s_user = s_session
@@ -175,7 +199,9 @@ if st.session_state.get('calculado', False):
 
         ax.set_xlabel("Entropía específica [kJ/kg·K]")
         ax.set_ylabel("Temperatura [°C]")
-        ax.set_title("Diagrama T–s del agua")
+        ax.set_title(
+            f"Diagrama T–s del {next(k for k, v in FLUID_MAP.items() if v == fluido)}"
+        )
         ax.grid(True)
         ax.legend()
 
