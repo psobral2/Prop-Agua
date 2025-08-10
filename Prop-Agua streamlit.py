@@ -7,7 +7,7 @@ from itertools import combinations
 
 # Título de la aplicación
 st.markdown("### Termodinámica – Máquinas Térmicas – Tecnología del Calor")
-st.markdown("#### **💧 Calculador de propiedades del agua**")
+st.markdown("##### **💧 Calculador de propiedades del agua**")
 st.divider()
 
 # Variables disponibles
