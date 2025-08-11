@@ -30,4 +30,4 @@ x = -1 significa que el estado no se encuentra ni dentro de la campana ni en su 
 
 CoolProp aún no permite calcular desde los siguientes pares de parámetros: (t,u) (t,h) (u,h) (u,s) (u,x) (h,x) y (s,x).
 
-**Créditos:** Basada en la app del [Ing. Pablo Barral](mailto:pbarral@fi.uba.ar), sin él no sabría nada de Python, Streamlit, CoolProp.
+**Créditos:** Basada en la app del [Ing. Pablo Barral](mailto:pbarral@fi.uba.ar), sin sus comentarios yo no sabría nada de Python, Streamlit, CoolProp.
