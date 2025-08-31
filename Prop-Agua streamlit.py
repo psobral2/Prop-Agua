@@ -142,7 +142,7 @@ st.sidebar.markdown("**Créditos:** Basada en la app de [Pablo Barral](https://g
 
 st.caption("###### Ingrese solo dos propiedades")
 
-col1, col2 = st.columns(2, gap=None)
+col1, col2 = st.columns(2)
 with col1:
     st.number_input(
         "Presión [bar(a)]",
