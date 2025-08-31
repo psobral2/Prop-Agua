@@ -9,6 +9,16 @@ from itertools import combinations
 st.set_page_config(page_title="Propiedades de los Fluidos", page_icon="🌡️", layout="wide")
 st.caption("###### Termodinámica – Máquinas Térmicas – Tecnología del Calor")
 
+# Para forzar 2 columnas en pantalla de celulares
+st.markdown("""
+<style>
+[data-testid="stHorizontalBlock"] > div {
+    flex: 1 1 50%;
+    min-width: 0;
+}
+</style>
+""", unsafe_allow_html=True)
+
 # Selección de fluido
 FLUID_MAP = {
     'Agua': 'Water',
