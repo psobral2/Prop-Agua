@@ -92,10 +92,6 @@ def limpiar_campos():
     st.session_state['s_num'] = None
     st.session_state['calculado'] = False
     st.session_state['resultados'] = None
-    try:
-        st.rerun()
-    except AttributeError:
-        st.experimental_rerun()
 
 
 def calcular_propiedades(var1, var2, fluid, **kwargs):
