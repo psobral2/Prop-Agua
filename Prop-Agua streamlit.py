@@ -6,8 +6,25 @@ from CoolProp.CoolProp import PropsSI
 from itertools import combinations
 
 # Título de la aplicación
-st.set_page_config(page_title="Propiedades de los Fluidos", page_icon="🌡️")
+st.set_page_config(page_title="Propiedades de los Fluidos", page_icon="🌡️", layout="wide")
 st.caption("###### Termodinámica – Máquinas Térmicas – Tecnología del Calor")
+
+#Fuerza dos columnas también en móviles
+st.markdown(
+    """
+    <style>
+    /* Fuerza dos columnas también en móviles */
+    @media (max-width: 600px) {
+        div[data-testid="column"] {
+            flex: 1 0 50% !important;
+            width: 50% !important;
+            min-width: 0;
+        }
+    }
+    </style>
+    """,
+    unsafe_allow_html=True
+)
 
 # Selección de fluido
 FLUID_MAP = {
