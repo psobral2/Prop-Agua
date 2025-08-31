@@ -44,6 +44,7 @@ for var in VARIABLES:
     st.session_state.setdefault(var, None)
 st.session_state.setdefault('first_input', None)
 st.session_state.setdefault('second_input', None)
+st.session_state.setdefault('input_order', [])
 st.session_state.setdefault('t_num', None)
 st.session_state.setdefault('s_num', None)
 st.session_state.setdefault('calculado', False)
@@ -61,24 +62,22 @@ if st.session_state.get('resultados'):
 
 
 def manejar_cambio(key):
-    """Borra los otros inputs al ingresar el primer valor."""
+    """Mantiene sólo los dos últimos inputs editados."""
     valor = st.session_state.get(key)
-    if st.session_state.get('first_input') is None:
-        if valor is not None:
-            st.session_state['first_input'] = key
-            st.session_state['second_input'] = None
-            for var in VARIABLES:
-                if var != key:
-                    st.session_state[var] = None
-            st.session_state['calculado'] = False
-            st.session_state['t_num'] = None
-            st.session_state['s_num'] = None
-    elif (
-        st.session_state.get('first_input') != key
-        and st.session_state.get('second_input') is None
-    ):
-        if valor is not None:
-            st.session_state['second_input'] = key
+    input_order = st.session_state.get('input_order', [])
+    if key in input_order:
+        input_order.remove(key)
+    if valor is not None:
+        input_order.append(key)
+    st.session_state['input_order'] = input_order
+    if len(input_order) > 2:
+        old_key = input_order.pop(0)
+        st.session_state[old_key] = None
+    st.session_state['first_input'] = input_order[0] if len(input_order) > 0 else None
+    st.session_state['second_input'] = input_order[1] if len(input_order) > 1 else None
+    st.session_state['calculado'] = False
+    st.session_state['t_num'] = None
+    st.session_state['s_num'] = None
 
 
 def calcular_propiedades(var1, var2, fluid, **kwargs):
@@ -192,8 +191,13 @@ with col3:
         max_value=1.0,
     )
 
+col_btn1, col_btn2 = st.columns(2)
+with col_btn1:
+    calcular = st.button("Calcular")
+with col_btn2:
+    limpiar = st.button("Limpiar")
 
-if st.button("Calcular"):
+if calcular:
     valores = {k: st.session_state[k] for k in VARIABLES if st.session_state[k] is not None}
     if len(valores) != 2:
         st.error("Por favor, ingrese exactamente dos valores.")
@@ -218,10 +222,26 @@ if st.button("Calcular"):
                 }
                 st.session_state['first_input'] = None
                 st.session_state['second_input'] = None
+                st.session_state['input_order'] = []
                 try:
                     st.rerun()
                 except AttributeError:
                     st.experimental_rerun()
+
+if limpiar:
+    for var in VARIABLES:
+        st.session_state[var] = None
+    st.session_state['input_order'] = []
+    st.session_state['first_input'] = None
+    st.session_state['second_input'] = None
+    st.session_state['t_num'] = None
+    st.session_state['s_num'] = None
+    st.session_state['calculado'] = False
+    st.session_state['resultados'] = None
+    try:
+        st.rerun()
+    except AttributeError:
+        st.experimental_rerun()
 
 
 if st.session_state.get('calculado', False):
