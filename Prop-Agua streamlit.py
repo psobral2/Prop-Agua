@@ -7,7 +7,6 @@ from itertools import combinations
 
 # Título de la aplicación
 st.set_page_config(page_title="Propiedades de los Fluidos", page_icon="🌡️", layout="wide")
-st.caption("###### Termodinámica – Máquinas Térmicas – Tecnología del Calor")
 
 #Fuerza dos columnas también en móviles
 st.markdown(
@@ -26,6 +25,7 @@ st.markdown(
     unsafe_allow_html=True
 )
 
+st.caption("###### Termodinámica – Máquinas Térmicas – Tecnología del Calor")
 # Selección de fluido
 FLUID_MAP = {
     'Agua': 'Water',
