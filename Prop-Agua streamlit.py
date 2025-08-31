@@ -10,17 +10,17 @@ st.set_page_config(page_title="Propiedades de los Fluidos", page_icon="🌡️",
 st.markdown(
     """
     <style>
-    /* Mantener dos columnas incluso en pantallas estrechas */
-    @media (max-width: 768px) {
-        /* Pone el bloque de columnas en fila */
+    @media (orientation: portrait) {
+        /* Mantener las columnas en fila */
         div[data-testid="stHorizontalBlock"] {
-            flex-direction: row;
-            flex-wrap: wrap;
+            display: flex;
+            flex-direction: row !important;
+            flex-wrap: nowrap;
         }
-        /* Cada columna ocupa la mitad del ancho */
-        div[data-testid="stHorizontalBlock"] > div[data-testid="column"] {
-            flex: 1 0 50% !important;
-            width: 50% !important;
+        /* Cada columna ocupa el 50 % del ancho */
+        div[data-testid="stHorizontalBlock"] > div {
+            flex: 1 1 50% !important;
+            max-width: 50% !important;
             min-width: 0;
         }
     }
