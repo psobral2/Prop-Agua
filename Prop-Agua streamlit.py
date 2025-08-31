@@ -6,7 +6,7 @@ from CoolProp.CoolProp import PropsSI
 from itertools import combinations
 
 # Título de la aplicación
-st.set_page_config(page_title="Propiedades de los Fluidos", page_icon="🌡️", layout="wide")
+st.set_page_config(page_title="Propiedades de los Fluidos", page_icon="🌡️")
 st.caption("###### Termodinámica – Máquinas Térmicas – Tecnología del Calor")
 
 # Para forzar 2 columnas en pantalla de celulares
