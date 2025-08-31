@@ -3,6 +3,7 @@
 Versión 1.1.
 
 log: 1.0. Primera versión
+
 log: 1.1. Campos input formato numérico en vez de texto. Se agrega botón Limpiar. Se fuerza 2 columnas en display angosto (celular portrait).
 
 Realizó: Pablo Sobral, para Termodinámica. 
