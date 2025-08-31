@@ -38,19 +38,10 @@ st.divider()
 
 # Variables disponibles
 VARIABLES = ['p', 't', 'v', 'u', 'h', 's', 'x']
-FMT = {
-    'p': '{:.2f}',
-    't': '{:.2f}',
-    'v': '{:.4f}',
-    'u': '{:.2f}',
-    'h': '{:.2f}',
-    's': '{:.4f}',
-    'x': '{:.4f}',
-}
 
 # Inicialización del estado
 for var in VARIABLES:
-    st.session_state.setdefault(var, '')
+    st.session_state.setdefault(var, None)
 st.session_state.setdefault('first_input', None)
 st.session_state.setdefault('second_input', None)
 st.session_state.setdefault('t_num', None)
@@ -63,7 +54,7 @@ if st.session_state.get('resultados'):
     resultados = st.session_state.pop('resultados')
     for var in VARIABLES:
         valor = resultados.get(var)
-        st.session_state[var] = FMT[var].format(valor) if valor is not None else ''
+        st.session_state[var] = valor if valor is not None else None
     st.session_state['t_num'] = resultados.get('t')
     st.session_state['s_num'] = resultados.get('s')
     st.session_state['calculado'] = True
@@ -71,19 +62,22 @@ if st.session_state.get('resultados'):
 
 def manejar_cambio(key):
     """Borra los otros inputs al ingresar el primer valor."""
-    valor = st.session_state.get(key, '')
+    valor = st.session_state.get(key)
     if st.session_state.get('first_input') is None:
-        if valor != '':
+        if valor is not None:
             st.session_state['first_input'] = key
             st.session_state['second_input'] = None
             for var in VARIABLES:
                 if var != key:
-                    st.session_state[var] = ''
+                    st.session_state[var] = None
             st.session_state['calculado'] = False
             st.session_state['t_num'] = None
             st.session_state['s_num'] = None
-    elif st.session_state.get('first_input') != key and st.session_state.get('second_input') is None:
-        if valor != '':
+    elif (
+        st.session_state.get('first_input') != key
+        and st.session_state.get('second_input') is None
+    ):
+        if valor is not None:
             st.session_state['second_input'] = key
 
 
@@ -137,19 +131,70 @@ st.caption("##### Ingrese dos propiedades en las casillas correspondientes")
 
 col1, col2, col3 = st.columns(3)
 with col1:
-    st.text_input("Presión [bar(a)]", key='p', on_change=manejar_cambio, args=('p',))
-    st.text_input("Temperatura [°C]", key='t', on_change=manejar_cambio, args=('t',))
-    st.text_input("Volumen específico [m³/kg]", key='v', on_change=manejar_cambio, args=('v',))
+    st.number_input(
+        "Presión [bar(a)]",
+        key='p',
+        on_change=manejar_cambio,
+        args=('p',),
+        format="%.2f",
+        step=0.01,
+    )
+    st.number_input(
+        "Temperatura [°C]",
+        key='t',
+        on_change=manejar_cambio,
+        args=('t',),
+        format="%.2f",
+        step=0.01,
+    )
+    st.number_input(
+        "Volumen específico [m³/kg]",
+        key='v',
+        on_change=manejar_cambio,
+        args=('v',),
+        format="%.4f",
+        step=0.0001,
+    )
 with col2:
-    st.text_input("Energía interna [kJ/kg]", key='u', on_change=manejar_cambio, args=('u',))
-    st.text_input("Entalpía [kJ/kg]", key='h', on_change=manejar_cambio, args=('h',))
-    st.text_input("Entropía [kJ/(kg·K)]", key='s', on_change=manejar_cambio, args=('s',))
+    st.number_input(
+        "Energía interna [kJ/kg]",
+        key='u',
+        on_change=manejar_cambio,
+        args=('u',),
+        format="%.2f",
+        step=0.01,
+    )
+    st.number_input(
+        "Entalpía [kJ/kg]",
+        key='h',
+        on_change=manejar_cambio,
+        args=('h',),
+        format="%.2f",
+        step=0.01,
+    )
+    st.number_input(
+        "Entropía [kJ/(kg·K)]",
+        key='s',
+        on_change=manejar_cambio,
+        args=('s',),
+        format="%.4f",
+        step=0.0001,
+    )
 with col3:
-    st.text_input("Título [0-1]", key='x', on_change=manejar_cambio, args=('x',))
+    st.number_input(
+        "Título [0-1]",
+        key='x',
+        on_change=manejar_cambio,
+        args=('x',),
+        format="%.4f",
+        step=0.0001,
+        min_value=0.0,
+        max_value=1.0,
+    )
 
 
 if st.button("Calcular"):
-    valores = {k: st.session_state[k] for k in VARIABLES if st.session_state[k] not in ('', None)}
+    valores = {k: st.session_state[k] for k in VARIABLES if st.session_state[k] is not None}
     if len(valores) != 2:
         st.error("Por favor, ingrese exactamente dos valores.")
     else:
@@ -158,30 +203,25 @@ if st.button("Calcular"):
         if clave is None:
             st.error("Combinación de propiedades no soportada.")
         else:
-            try:
-                parsed = {k: float(v) for k, v in valores.items()}
-            except ValueError:
-                st.error("Los valores deben ser numéricos.")
-            else:
-                t, p, v, u, h, s, x = calcular_propiedades(
-                    *clave, st.session_state['fluid'], **parsed
-                )
-                if t is not None:
-                    st.session_state['resultados'] = {
-                        'p': p,
-                        't': t,
-                        'v': v,
-                        'u': u,
-                        'h': h,
-                        's': s,
-                        'x': x,
-                    }
-                    st.session_state['first_input'] = None
-                    st.session_state['second_input'] = None
-                    try:
-                        st.rerun()
-                    except AttributeError:
-                        st.experimental_rerun()
+            t, p, v, u, h, s, x = calcular_propiedades(
+                *clave, st.session_state['fluid'], **valores
+            )
+            if t is not None:
+                st.session_state['resultados'] = {
+                    'p': p,
+                    't': t,
+                    'v': v,
+                    'u': u,
+                    'h': h,
+                    's': s,
+                    'x': x,
+                }
+                st.session_state['first_input'] = None
+                st.session_state['second_input'] = None
+                try:
+                    st.rerun()
+                except AttributeError:
+                    st.experimental_rerun()
 
 
 if st.session_state.get('calculado', False):
