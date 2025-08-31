@@ -145,7 +145,7 @@ with col2:
     st.text_input("Entalpía [kJ/kg]", key='h', on_change=manejar_cambio, args=('h',))
     st.text_input("Entropía [kJ/(kg·K)]", key='s', on_change=manejar_cambio, args=('s',))
 with col3:
-    st.text_input("Título [0-1]", key='x', on_change=manejar_cambio, args=('x',))
+    st.number_input("Título [0-1]", key='x', on_change=manejar_cambio, args=('x',),min_value=0.0, max_value=1.0, step=0.0001)
 
 
 if st.button("Calcular"):
