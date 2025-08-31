@@ -69,15 +69,33 @@ def manejar_cambio(key):
         input_order.remove(key)
     if valor is not None:
         input_order.append(key)
-    st.session_state['input_order'] = input_order
     if len(input_order) > 2:
-        old_key = input_order.pop(0)
-        st.session_state[old_key] = None
+        input_order = input_order[-2:]
+    st.session_state['input_order'] = input_order
+    for var in VARIABLES:
+        if var not in input_order:
+            st.session_state[var] = None
     st.session_state['first_input'] = input_order[0] if len(input_order) > 0 else None
     st.session_state['second_input'] = input_order[1] if len(input_order) > 1 else None
     st.session_state['calculado'] = False
     st.session_state['t_num'] = None
     st.session_state['s_num'] = None
+
+
+def limpiar_campos():
+    for var in VARIABLES:
+        st.session_state[var] = None
+    st.session_state['input_order'] = []
+    st.session_state['first_input'] = None
+    st.session_state['second_input'] = None
+    st.session_state['t_num'] = None
+    st.session_state['s_num'] = None
+    st.session_state['calculado'] = False
+    st.session_state['resultados'] = None
+    try:
+        st.rerun()
+    except AttributeError:
+        st.experimental_rerun()
 
 
 def calcular_propiedades(var1, var2, fluid, **kwargs):
@@ -194,7 +212,7 @@ col_btn1, col_btn2 = st.columns(2)
 with col_btn1:
     calcular = st.button("Calcular")
 with col_btn2:
-    limpiar = st.button("Limpiar")
+    st.button("Limpiar", on_click=limpiar_campos)
 
 if calcular:
     valores = {k: st.session_state[k] for k in VARIABLES if st.session_state[k] is not None}
@@ -226,21 +244,6 @@ if calcular:
                     st.rerun()
                 except AttributeError:
                     st.experimental_rerun()
-
-if limpiar:
-    for var in VARIABLES:
-        st.session_state[var] = None
-    st.session_state['input_order'] = []
-    st.session_state['first_input'] = None
-    st.session_state['second_input'] = None
-    st.session_state['t_num'] = None
-    st.session_state['s_num'] = None
-    st.session_state['calculado'] = False
-    st.session_state['resultados'] = None
-    try:
-        st.rerun()
-    except AttributeError:
-        st.experimental_rerun()
 
 
 if st.session_state.get('calculado', False):
