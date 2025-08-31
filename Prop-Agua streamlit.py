@@ -142,7 +142,7 @@ st.sidebar.markdown("**Créditos:** Basada en la app de [Pablo Barral](https://g
 
 st.caption("###### Ingrese solo dos propiedades")
 
-col1, col2, col3 = st.columns(3)
+col1, col2 = st.columns(2)
 with col1:
     st.number_input(
         "Presión [bar(a)]",
@@ -168,6 +168,15 @@ with col1:
         format="%.4f",
         step=0.0001,
     )
+    st.number_input(
+        "Título [0-1]",
+        key='x',
+        on_change=manejar_cambio,
+        args=('x',),
+        format="%.4f",
+        step=0.0001,
+        max_value=1.0,
+    )
 with col2:
     st.number_input(
         "Energía interna [kJ/kg]",
@@ -192,16 +201,6 @@ with col2:
         args=('s',),
         format="%.4f",
         step=0.0001,
-    )
-with col3:
-    st.number_input(
-        "Título [0-1]",
-        key='x',
-        on_change=manejar_cambio,
-        args=('x',),
-        format="%.4f",
-        step=0.0001,
-        max_value=1.0,
     )
 
 col_btn1, col_btn2 = st.columns(2)
