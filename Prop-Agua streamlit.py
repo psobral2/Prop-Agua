@@ -140,7 +140,7 @@ st.sidebar.markdown("[Readme.md](https://github.com/psobral2/Prop-Agua/blob/main
 st.sidebar.markdown("---")
 st.sidebar.markdown("**Créditos:** Basada en la app de [Pablo Barral](https://github.com/PabloMBarral)")
 
-st.caption("##### Ingrese dos propiedades en las casillas correspondientes")
+st.caption("###### Ingrese solo dos propiedades")
 
 col1, col2, col3 = st.columns(3)
 with col1:
