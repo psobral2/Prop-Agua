@@ -37,6 +37,21 @@ FLUID_MAP = {
     'R404A': 'R404A',
     'Amoníaco': 'Ammonia',
 }
+
+
+def cambiar_fluido():
+    """Descarta resultados calculados con el fluido anterior."""
+    for var in ('p', 't', 'v', 'u', 'h', 's', 'x'):
+        st.session_state[var] = None
+    st.session_state['input_order'] = []
+    st.session_state['first_input'] = None
+    st.session_state['second_input'] = None
+    st.session_state['t_num'] = None
+    st.session_state['s_num'] = None
+    st.session_state['calculado'] = False
+    st.session_state['resultados'] = None
+
+
 st.session_state.setdefault('fluid', 'Water')
 
 # Determinar el nombre del fluido
@@ -53,6 +68,7 @@ st.selectbox(
     list(FLUID_MAP.values()),
     key='fluid',
     format_func=lambda v: next(k for k, val in FLUID_MAP.items() if val == v),
+    on_change=cambiar_fluido,
 )
 st.divider()
 
@@ -268,7 +284,7 @@ if st.session_state.get('calculado', False):
         fluido = st.session_state['fluid']
         Tcrit = PropsSI('Tcrit', fluido)
         Tmin = PropsSI('Ttriple', fluido)
-        Tsat = np.linspace(Tmin, Tcrit, 500)
+        Tsat = np.linspace(Tmin, Tcrit - 1e-4, 500)
         s_liq = [PropsSI('S', 'T', T, 'Q', 0, fluido) / 1000 for T in Tsat]
         s_vap = [PropsSI('S', 'T', T, 'Q', 1, fluido) / 1000 for T in Tsat]
         T_C = Tsat - 273.15
@@ -290,4 +306,5 @@ if st.session_state.get('calculado', False):
         ax.legend()
 
         st.pyplot(fig)
+        plt.close(fig)
 
