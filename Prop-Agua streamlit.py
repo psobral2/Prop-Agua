@@ -185,7 +185,7 @@ with col1:
         key='p',
         on_change=manejar_cambio,
         args=('p',),
-        format="%.2f",
+        format="%.4f",
         step=0.01,
     )
     st.number_input(
